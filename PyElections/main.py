@@ -6,8 +6,8 @@ import collections
 import operator
 
 # Seting the  path for file
-csvpath = os.path.join('houston_election_data.csv')
-file_to_output = os.path.join('houston_election.csv')
+csvpath = os.path.join('Resources','houston_election_data.csv')
+file_to_output = os.path.join('houston_election_output.txt')
 
 # Opening the CSV
 with open(csvpath, newline='', encoding='utf-8') as csv_file:
@@ -22,7 +22,9 @@ with open(csvpath, newline='', encoding='utf-8') as csv_file:
             candidate[row[0]] = 1
         else:
            candidate[row[0]] += 1
+        #    print(candidate[row[0]])
         candidate_sorted = sorted(candidate.items(), key=operator.itemgetter(1),reverse=True)
+# print(candidate_sorted)
 
     print()
     print("--------------------------------------------------------")
