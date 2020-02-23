@@ -5,8 +5,8 @@ import os
 
 
 # Files to Load
-file_to_load = os.path.join('budget_data.csv')
-file_to_output = os.path.join('budget_output.csv')
+file_to_load = os.path.join('Resources','budget_data.csv')
+file_to_output = os.path.join('budget_output.txt')
 
 
 # Variables to use
