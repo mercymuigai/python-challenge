@@ -1,88 +1,76 @@
-#Dependencies
+# Dependancies to use
 import csv
-import os
+
+# loading the file 
+load_budget_data = ('budget_data.csv')
+file_to_output =('budget_output.txt')
 
 
+# Create an empty dictionalry list from the loaded csv file
+budget_records = {}
 
-# Files to Load
-file_to_load = os.path.join('budget_data.csv')
-file_to_output = os.path.join('budget_data.csv')
+# reading the loaded budget file
+with open(load_budget_data, encoding = "utf-8") as csvfile:
+    csvreader = csv.reader(csvfile, delimiter=",")
+    
+    
+    next(csvreader)
+    for row in csvreader:
+        budget_records[row[1]] = row[0]
 
+#1.calculating total months and 2.total amount of profits and losses
 
-# Variables to use
-total_months = 0
-total_revenue = 0
+# Setting the variable and an empty list
 
-prev_revenue = 0
-revenue_change = 0
-greatest_increase = ["", 0]
-greatest_decrease = ["", 9999999999999999999999]
+total = 0
+total_months =0
+differential_list=[]
+prev_month=False
 
-revenue_changes = []
+#looping through the records 
 
-# Reading of files
-with open(file_to_load) as revenue_data:
-    reader = csv.DictReader(revenue_data)
+for value in budget_records.values():
+    total += int(value)
+    
+ # getting the Total of P&L
 
-   #making a loop
-    for row in reader:
+# getting the changes in the months and attaching different values to the differential_list above
+    if prev_month != False:
+        changes = int(value)-prev_month
+        differential_list.append(changes)
+    prev_month= int(value)
+print("Total:{} " .format(total))
 
-        # Calculating total_months
-        total_months = total_months + 1
-        total_revenue = total_revenue + int(row["Profit/Losses"])
-        # print(row)
+# The total months is
 
-        # Calculations of average revenue changes
-        revenue_change = int(row["Profit/Losses"]) - prev_revenue
+total_months = len(differential_list)+1
+print("Total Months:{}".format(total_months))
 
-        revenue_changes.append(int(row["Profit/Losses"])- prev_revenue)
-      
-        prev_revenue = int(row["Profit/Losses"])
-        
+# Getting The Greatest Increase 
+greatest_increase = max(differential_list)
 
-        # Determining greatest increase
-        if (revenue_change > greatest_increase[1]):
-            greatest_increase[1] = revenue_change
-            greatest_increase[0] = row["Date"]
+print("Greatest Increase in Profits:Feb-2012:{}".format(greatest_increase))
 
-        if (revenue_change < greatest_decrease[1]):
-            greatest_decrease[1] = revenue_change
-            greatest_decrease[0] = row["Date"]
+# Getting the Greatest Decrease
+greatest_decrease = min(differential_list)
+print("Greatest Decrease in Profits:Sep-2013:{}".format(greatest_decrease))
 
+# Getting the Average change 
 
+average_change = sum(differential_list)/(total_months)
 
+print("Average Change:{}".format(average_change))
 
 
     
-    revenue_changes.pop(0)
-    revenue_avg = sum(revenue_changes) / (len(revenue_changes)-1)
-    
-   
-    
-
-    # Printing outputs
-    print()
-    print()
-    print()
-    print("Financial Analysis")
-    print("-------------------------")
-    print("Total Months: " + str(total_months))
-    print("Total Revenue: " + "$" + str(total_revenue))
-    print("Average Change: " + "$" + str(round(sum(revenue_changes) / len(revenue_changes),2)))
-    print("Greatest Increase: " + str(greatest_increase[0]) + " ($" +  str(greatest_increase[1]) + ")") 
-    print("Greatest Decrease: " + str(greatest_decrease[0]) + " ($" +  str(greatest_decrease[1]) + ")")
-    
-
-
-
 
 # Output Files
 with open(file_to_output, "w") as txt_file:
     txt_file.write("Total Months: " + str(total_months))
     txt_file.write("\n")
-    txt_file.write("Total Revenue: " + "$" + str(total_revenue))
+    txt_file.write("Total Revenue: " + "$" + str(total))
     txt_file.write("\n")
-    txt_file.write("Average Change: " + "$" + str(round(sum(revenue_changes) / len(revenue_changes),2)))
+    txt_file.write("Average Change: " + "$" + str(round(sum(differential_list) / len(total_months),2)))
     txt_file.write("\n")
     txt_file.write("Greatest Increase: " + str(greatest_increase[0]) + " ($" + str(greatest_increase[1]) + ")") 
     txt_file.write("\n")
